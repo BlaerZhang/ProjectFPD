@@ -863,8 +863,8 @@ MonoBehaviour:
   invertLookY: 0
   clampLookY: 90
   crouchSpeed: 3
-  walkSpeed: 7
-  runSpeed: 12
+  walkSpeed: 12
+  runSpeed: 20
   slideSpeed: 14
   slideDuration: 2.2
   gravity: -19.62
