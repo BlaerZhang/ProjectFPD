@@ -4,6 +4,7 @@ using UnityEngine;
 using Random = UnityEngine.Random;
 
 // [RequireComponent(typeof(Animator))]
+[RequireComponent(typeof(MagManager))]
 public class AssaultRifleDeck : MonoBehaviour
 {
     [SerializeField]
@@ -29,23 +30,35 @@ public class AssaultRifleDeck : MonoBehaviour
 
     private Animator Animator;
     private float LastShootTime;
+    private bool isReloading = false;
+    private MagManager magManager;
 
     private void Awake()
     {
         // Animator = GetComponent<Animator>();
+        magManager = GetComponent<MagManager>();
     }
 
     private void Update()
     {
         if(Input.GetMouseButton(0)) Shoot();
+        if(Input.GetKeyDown(KeyCode.R)) StartCoroutine(Reload());
     }
 
     public void Shoot()
     {
+        if (isReloading) return;
+        if (magManager.ammo == 0) 
+        {
+            StartCoroutine(Reload());
+            return;
+        }
+
         if (LastShootTime + ShootDelay < Time.time)
         {
             // Animator.SetBool("IsShooting", true);
             // MuzzleFlashParticle.Play();
+            
             Vector3 direction = GetDirection();
 
             if (Physics.Raycast(fPDCamera.transform.position, direction, out RaycastHit hit, float.MaxValue, Mask))
@@ -55,6 +68,12 @@ public class AssaultRifleDeck : MonoBehaviour
                 StartCoroutine(SpawnTrail(trail, hit.point, hit.normal, true));
 
                 LastShootTime = Time.time;
+
+                if (hit.collider.gameObject.TryGetComponent(out EnemyBase enemy))
+                {
+                    // TODO: Hit Feedbacks
+                    magManager.magazine[0].ApplyEffects(enemy);
+                }
             }
             // this has been updated to fix a commonly reported problem that you cannot fire if you would not hit anything
             else
@@ -65,7 +84,20 @@ public class AssaultRifleDeck : MonoBehaviour
 
                 LastShootTime = Time.time;
             }
+
+            magManager.discard.Add(magManager.magazine[0]);
+            magManager.magazine.RemoveAt(0);
+            magManager.OnShoot();
         }
+    }
+
+    private IEnumerator Reload()
+    {
+        isReloading = true;
+        // TODO: Reload Animation
+        yield return new WaitForSeconds(1f);
+        magManager.OnReload();
+        isReloading = false;
     }
 
     private Vector3 GetDirection()

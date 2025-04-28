@@ -4,5 +4,5 @@ using UnityEngine;
 
 public abstract class CardEffectBase
 {
-    public abstract void Apply();
+    public abstract void Apply(EnemyBase enemy);
 }
