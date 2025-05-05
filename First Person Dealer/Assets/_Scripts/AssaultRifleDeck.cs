@@ -72,7 +72,12 @@ public class AssaultRifleDeck : MonoBehaviour
                 if (hit.collider.gameObject.TryGetComponent(out EnemyBase enemy))
                 {
                     // TODO: Hit Feedbacks
-                    magManager.magazine[0].ApplyEffects(enemy);
+                    magManager.OnShoot(enemy);
+                    enemy.OnHit();
+                }
+                else
+                {
+                    magManager.OnShoot();
                 }
             }
             // this has been updated to fix a commonly reported problem that you cannot fire if you would not hit anything
@@ -83,11 +88,9 @@ public class AssaultRifleDeck : MonoBehaviour
                 StartCoroutine(SpawnTrail(trail, BulletSpawnPoint.position + GetDirection() * 100, Vector3.zero, false));
 
                 LastShootTime = Time.time;
-            }
 
-            magManager.discard.Add(magManager.magazine[0]);
-            magManager.magazine.RemoveAt(0);
-            magManager.OnShoot();
+                magManager.OnShoot();
+            }
         }
     }
 

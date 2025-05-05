@@ -193,6 +193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f6ff90aed0c8ab419044827f1d1104e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  magazine: []
+  discard: []
   ammo: 0
 --- !u!1 &54411811
 GameObject:
@@ -747,6 +749,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   deckSize: 15
   defaultCardData: {fileID: 11400000, guid: b737c17a99dc7ee4d93c8460108d282d, type: 2}
+  deck: []
 --- !u!1 &1270917572
 GameObject:
   m_ObjectHideFlags: 0
@@ -1077,7 +1080,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 0
-  maxHealth: 100
+  maxHealth: 10000
+  damagePopUpPrefab: {fileID: 8468533802722830632, guid: 7ac8a3a1d08f01d4bb0e2119abcb0cac, type: 3}
 --- !u!1 &2074346234
 GameObject:
   m_ObjectHideFlags: 0
