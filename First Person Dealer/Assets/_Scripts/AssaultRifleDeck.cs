@@ -2,10 +2,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Random = UnityEngine.Random;
-
+using JoostenProductions;
+using Events;
 // [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(MagManager))]
-public class AssaultRifleDeck : MonoBehaviour
+public class AssaultRifleDeck : OverridableMonoBehaviour
 {
     [SerializeField]
     private Camera fPDCamera;
@@ -27,11 +28,14 @@ public class AssaultRifleDeck : MonoBehaviour
     private LayerMask Mask;
     [SerializeField]
     private float BulletSpeed = 100;
+    [SerializeField]
+    private float ReloadTime = 1f;
 
     private Animator Animator;
     private float LastShootTime;
     private bool isReloading = false;
     private MagManager magManager;
+    private Coroutine currentReloadCoroutine;
 
     private void Awake()
     {
@@ -39,7 +43,7 @@ public class AssaultRifleDeck : MonoBehaviour
         magManager = GetComponent<MagManager>();
     }
 
-    private void Update()
+    public override void UpdateMe()
     {
         if(Input.GetMouseButton(0)) Shoot();
         if(Input.GetKeyDown(KeyCode.R)) StartCoroutine(Reload());
@@ -47,10 +51,15 @@ public class AssaultRifleDeck : MonoBehaviour
 
     public void Shoot()
     {
-        if (isReloading) return;
-        if (magManager.ammo == 0) 
+        if (isReloading) 
         {
-            StartCoroutine(Reload());
+            if (magManager.HasAmmo) CancelReload();
+            return;
+        }
+
+        if (!magManager.HasAmmo) 
+        {
+            currentReloadCoroutine = StartCoroutine(Reload());
             return;
         }
 
@@ -96,11 +105,38 @@ public class AssaultRifleDeck : MonoBehaviour
 
     private IEnumerator Reload()
     {
+        if (isReloading || magManager.IsMagFull) yield break;
+        
         isReloading = true;
+        WeaponEvents.TriggerReloadStart(ReloadTime);
+        
         // TODO: Reload Animation
-        yield return new WaitForSeconds(1f);
-        magManager.OnReload();
+        float elapsedTime = 0f;
+        while (elapsedTime < ReloadTime)
+        {
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+        
+        if (isReloading)  // 确保没有被取消
+        {
+            magManager.OnReload();
+            WeaponEvents.TriggerReloadComplete();
+        }
+        
         isReloading = false;
+        currentReloadCoroutine = null;
+    }
+
+    public void CancelReload()
+    {
+        if (isReloading && currentReloadCoroutine != null)
+        {
+            StopCoroutine(currentReloadCoroutine);
+            currentReloadCoroutine = null;
+            isReloading = false;
+            WeaponEvents.TriggerReloadCancel();
+        }
     }
 
     private Vector3 GetDirection()

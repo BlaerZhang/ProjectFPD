@@ -31,13 +31,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
- 
+using JoostenProductions;
+
+
 #if UNITY_EDITOR // only required if using the Menu Item function at the end of this script
 using UnityEditor;
 #endif
  
 [RequireComponent(typeof(CharacterController))]
-public class BasicFPCC : MonoBehaviour
+public class BasicFPCC : OverridableMonoBehaviour
 {
     [Header("Layer Mask")]
     [Tooltip("Layer Mask for sphere/raycasts. Assign the Player object to a Layer, then Ignore that layer here.")]
@@ -153,7 +155,7 @@ public class BasicFPCC : MonoBehaviour
         Initialize();
     }
  
-    void Update()
+    public override void UpdateMe()
     {
         ProcessInputs();
         ProcessLook();

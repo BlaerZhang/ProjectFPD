@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,9 +7,14 @@ using Sirenix.OdinInspector;
 public class DeckManager : MonoBehaviour
 {
     public static DeckManager instance;
-    public int deckSize;
-    public CardDataSO defaultCardData;
+    
+    // 牌组变化事件
+    public static event Action OnDeckChanged;
+
+    [SerializeField] private int initialDeckSize = 30;  // 初始牌组大小
+    public int DeckSize => deck.Count;
     public List<Card> deck;
+    public CardDataSO defaultCardData;
 
     private void Awake()
     {
@@ -19,43 +25,44 @@ public class DeckManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
         }
         DontDestroyOnLoad(gameObject);
-    }
-
-    void Start()
-    {
         SetupDefaultDeck();
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
 
     private void SetupDefaultDeck()
     {
         deck = new List<Card>();
-        for (int i = 0; i < deckSize; i++)
+        for (int i = 0; i < initialDeckSize; i++)
         {
             deck.Add(new Card(defaultCardData));
         }
+        OnDeckChanged?.Invoke();
     }
 
     public void DiscardCard(int index)
     {
-        deck.RemoveAt(index);
+        if (index >= 0 && index < deck.Count)
+        {
+            deck.RemoveAt(index);
+            OnDeckChanged?.Invoke();
+        }
     }
 
     public void AddCard(Card card)
     {
         deck.Add(card);
+        OnDeckChanged?.Invoke();
     }
 
     public void SwapCard(int index, Card newCard)
     {
-        deck[index] = newCard;
+        if (index >= 0 && index < deck.Count)
+        {
+            deck[index] = newCard;
+            OnDeckChanged?.Invoke();
+        }
     }
     
     [GUIColor(0.4f, 0.8f, 1f)]
