@@ -2,25 +2,59 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
+using UnityEngine.EventSystems;
+using DG.Tweening;
 
-public class CardView : MonoBehaviour
+public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerEnterHandler, IPointerExitHandler, IDragHandler, IBeginDragHandler, IEndDragHandler
 {
     private Card card;
-    [SerializeField] private SpriteRenderer CardSpriteRenderer;
-    [SerializeField] private TMP_Text CardNameText;
-    [SerializeField] private TMP_Text CardDescriptionText;
-
-    public void Initialize(Card card)
+    private CardVisual cardVisual;
+    [SerializeField] private GameObject CardVisualPrefab;
+    public CardVisual InitializeAndCreateCardVisual(Card card)
     {
         this.card = card;
-        CardSpriteRenderer.sprite = card.CardSprite;
-        CardNameText.text = card.CardName;
-        CardDescriptionText.text = card.CardDescription;
+        cardVisual = Instantiate(CardVisualPrefab, transform).GetComponent<CardVisual>();
+        cardVisual.cardView = this;
+        cardVisual.CardImage.sprite = card.CardSprite;
+        cardVisual.CardNameText.text = card.CardName;
+        cardVisual.CardDescriptionText.text = card.CardDescription;
+        return cardVisual;
     }
 
-    private void OnMouseDown(){}
-    private void OnMouseUp(){}
-    private void OnMouseEnter(){}
-    private void OnMouseExit(){}
-    private void OnMouseDrag(){}
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        // 处理鼠标按下事件
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        // 处理鼠标松开事件
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        cardVisual.transform.DOScale(1.1f, 0.2f).SetUpdate(true);
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        cardVisual.transform.DOScale(1f, 0.2f).SetUpdate(true);
+    }
+
+    public void OnDrag(PointerEventData eventData)
+    {
+        Debug.Log("OnDrag");
+        transform.position = eventData.position;
+    }
+
+    public void OnBeginDrag(PointerEventData eventData)
+    {
+        // 处理鼠标开始拖拽事件
+    }
+
+    public void OnEndDrag(PointerEventData eventData)
+    {
+        transform.localPosition = Vector3.zero;
+    }
 }

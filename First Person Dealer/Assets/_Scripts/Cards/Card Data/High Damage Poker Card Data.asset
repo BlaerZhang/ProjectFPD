@@ -43,6 +43,6 @@ MonoBehaviour:
     - Name: 
       Entry: 8
       Data: 
-  image: {fileID: 0}
+  image: {fileID: 21300000, guid: e5600378dd761e64d9423790c482bf36, type: 3}
   cardName: High Damage Plain Poker
   description: Deal 15 Damage.
