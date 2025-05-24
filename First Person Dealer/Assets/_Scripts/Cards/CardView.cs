@@ -34,23 +34,22 @@ public class CardView : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, I
 
     public void OnPointerEnter(PointerEventData eventData)
     {
-        cardVisual.transform.DOScale(1.1f, 0.2f).SetUpdate(true);
+        cardVisual.transform.DOScale(1.1f, 0.1f).SetUpdate(true);
     }
 
     public void OnPointerExit(PointerEventData eventData)
     {
-        cardVisual.transform.DOScale(1f, 0.2f).SetUpdate(true);
+        cardVisual.transform.DOScale(1f, 0.1f).SetUpdate(true);
     }
 
     public void OnDrag(PointerEventData eventData)
     {
-        Debug.Log("OnDrag");
         transform.position = eventData.position;
     }
 
     public void OnBeginDrag(PointerEventData eventData)
     {
-        // 处理鼠标开始拖拽事件
+        cardVisual.transform.SetAsLastSibling();
     }
 
     public void OnEndDrag(PointerEventData eventData)

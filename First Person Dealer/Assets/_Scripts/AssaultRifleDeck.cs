@@ -67,6 +67,7 @@ public class AssaultRifleDeck : OverridableMonoBehaviour
         {
             // Animator.SetBool("IsShooting", true);
             // MuzzleFlashParticle.Play();
+            WeaponEvents.TriggerFire();
             
             Vector3 direction = GetDirection();
 

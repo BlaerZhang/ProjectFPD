@@ -17,6 +17,9 @@ namespace Events
         // 换弹被取消事件
         public static event Action OnReloadCancelled;
 
+        // 射击事件
+        public static event Action OnFire;
+
         // 击中敌人事件
         public static event Action OnEnemyHit;
 
@@ -60,6 +63,12 @@ namespace Events
         public static void TriggerAmmoChanged(int currentAmmo, int maxAmmo)
         {
             OnAmmoChanged?.Invoke(currentAmmo, maxAmmo);
+        }
+
+        // 触发射击事件
+        public static void TriggerFire()
+        {
+            OnFire?.Invoke();
         }
     }
 } 
