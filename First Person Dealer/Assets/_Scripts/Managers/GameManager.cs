@@ -1,6 +1,6 @@
 using UnityEngine;
 using System;
-
+using Sirenix.OdinInspector;
 public enum GameState
 {
     InGame,         // 游戏进行中
@@ -17,6 +17,9 @@ public class GameManager : MonoBehaviour
     public event Action<GameState> OnGameStateChanged;
     private bool cursorLocked = true;
 
+    [Title("Managers")]
+    public DamageCalculator damageCalculator;
+
     private void Awake()
     {
         if (Instance == null)
@@ -25,11 +28,17 @@ public class GameManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             CurrentGameState = GameState.InGame; // 默认状态
             SetLockCursor(true); // 默认锁定光标
+            InitializeManagers();
         }
         else
         {
             Destroy(gameObject);
         }
+    }
+
+    private void InitializeManagers()
+    {
+        damageCalculator = GetComponent<DamageCalculator>();
     }
 
     public void ChangeGameState(GameState newState)

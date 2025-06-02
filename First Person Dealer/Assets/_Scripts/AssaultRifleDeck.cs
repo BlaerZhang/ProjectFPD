@@ -79,11 +79,21 @@ public class AssaultRifleDeck : OverridableMonoBehaviour
 
                 LastShootTime = Time.time;
 
-                if (hit.collider.gameObject.TryGetComponent(out EnemyBase enemy))
+                if (hit.collider.transform.parent.TryGetComponent(out EnemyBase enemy))
                 {
                     // TODO: Hit Feedbacks
-                    magManager.OnShoot(enemy);
+                    DamageContext damageContext = new DamageContext
+                    {
+                        Target = enemy,
+                    };
+                    magManager.OnShoot(damageContext);
                     enemy.OnHit();
+
+                    if (hit.collider.CompareTag("Weak Spot"))
+                    {
+                        damageContext.IsCriticalHit = true;
+                        WeaponEvents.TriggerCriticalHit();
+                    }
                 }
                 else
                 {

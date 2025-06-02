@@ -9,7 +9,9 @@ public class CrosshairManager : MonoBehaviour
 {
     [Header("UI References")]
     [SerializeField] private Image reloadIndicator;
-
+    [SerializeField] private Image criticalHitIndicator;
+    [SerializeField] private float criticalHitFadeOutDuration = 0.1f;
+    [SerializeField] private float criticalHitShowDuration = 0.1f;
     void OnEnable()
     {
          // 订阅事件
@@ -36,8 +38,10 @@ public class CrosshairManager : MonoBehaviour
         {
             reloadIndicator.fillAmount = 0f;
         }
-        
-       
+        if (criticalHitIndicator != null)
+        {
+            criticalHitIndicator.color = new Color(criticalHitIndicator.color.r, criticalHitIndicator.color.g, criticalHitIndicator.color.b, 0f);
+        }
     }
 
     private void HandleReloadStart(float reloadTime)
@@ -74,6 +78,12 @@ public class CrosshairManager : MonoBehaviour
 
     private void HandleCriticalHit()
     {
-        // 处理关键部位击中事件
+        criticalHitIndicator.DOKill();
+        criticalHitIndicator.color = new Color(criticalHitIndicator.color.r, criticalHitIndicator.color.g, criticalHitIndicator.color.b, 1f);
+        
+        // 每次击中都重新开始计时
+        criticalHitIndicator
+            .DOFade(0f, criticalHitFadeOutDuration)
+            .SetDelay(criticalHitShowDuration);
     }
 }

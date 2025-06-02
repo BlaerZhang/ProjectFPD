@@ -5,9 +5,12 @@ using UnityEngine;
 public class BasicDamageEffect : CardEffectBase
 {
     public int Damage = 5;
-    public override void Apply(EnemyBase enemy)
+    private int finalDamage;
+    public override void Apply(DamageContext damageContext)
     {
         Debug.Log("Basic Damage Effect with damage: " + Damage);
-        enemy.TakeDamage(Damage);
+        damageContext.CardEffectBaseDamage = Damage;
+        finalDamage = GameManager.Instance.damageCalculator.CalculateDamage(damageContext);
+        damageContext.Target.TakeDamage(finalDamage);
     }
 }

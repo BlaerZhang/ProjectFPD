@@ -53,9 +53,14 @@ public class MagManager : MonoBehaviour
     /// <summary>
     /// 处理击中敌人的射击
     /// </summary>
-    public void OnShoot(EnemyBase enemy)
+    public void OnShoot(DamageContext damageContext)
     {
-        magazine[0].ApplyEffects(enemy);
+        // 设置damageContext
+        damageContext.SourceCard = magazine[0];
+        damageContext.PreviousCards = discard;
+        damageContext.LastCard = discard.Count > 0 ? discard.Last() : null;
+        
+        magazine[0].ApplyEffects(damageContext);
         discard.Add(magazine[0]);
         magazine.RemoveAt(0);
         

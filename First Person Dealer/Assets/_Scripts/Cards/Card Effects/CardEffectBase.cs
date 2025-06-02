@@ -5,5 +5,5 @@ using UnityEngine;
 [System.Serializable]
 public abstract class CardEffectBase
 {
-    public abstract void Apply(EnemyBase enemy);
+    public abstract void Apply(DamageContext damageContext);
 }

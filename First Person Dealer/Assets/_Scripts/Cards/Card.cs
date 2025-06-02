@@ -19,11 +19,11 @@ public class Card
     public string CardDescription { get; private set; }
     public List<CardEffectBase> CardEffects { get; private set; }
 
-    public void ApplyEffects(EnemyBase enemy)
+    public void ApplyEffects(DamageContext damageContext)
     {
         foreach (var effect in CardEffects)
         {
-            effect.Apply(enemy);
+            effect.Apply(damageContext);
         }
     }
     
