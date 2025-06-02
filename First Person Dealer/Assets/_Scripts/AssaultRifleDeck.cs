@@ -86,14 +86,15 @@ public class AssaultRifleDeck : OverridableMonoBehaviour
                     {
                         Target = enemy,
                     };
-                    magManager.OnShoot(damageContext);
-                    enemy.OnHit();
 
                     if (hit.collider.CompareTag("Weak Spot"))
                     {
                         damageContext.IsCriticalHit = true;
                         WeaponEvents.TriggerCriticalHit();
                     }
+
+                    magManager.OnShoot(damageContext);
+                    enemy.OnHit();
                 }
                 else
                 {
